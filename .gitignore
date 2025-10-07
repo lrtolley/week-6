@@ -17,6 +17,7 @@ cython_debug/
 *.db
 *.graphml
 # *.pickle
+*.env
 
 # notebooks
 *scratch.ipynb
