@@ -95,42 +95,40 @@ class Genius:
         return artist_json
 
     def get_artists(self, search_terms: List[str]) -> pd.DataFrame:
-        """Given a list of search terms, return a DataFrame with columns:
-        search_term, artist_name, artist_id, followers_count
-        """
-        rows = []
-        for term in search_terms:
-            try:
-                artist = self.get_artist(term)
-            except Exception:
-                artist = None
+    """Given a list of search terms, return a DataFrame with columns:
+    search_term, artist_name, artist_id, followers_count
+    """
+    rows = []
+    for term in search_terms:
+        try:
+            artist_json = self.get_artist(term)
+        except Exception:
+            artist_json = None
 
-            if artist:
-                artist_name = artist.get("name")
-                artist_id = artist.get("id")
-                # try several places for follower counts
-                followers = artist.get("followers_count")
-                if followers is None:
-                    followers = artist.get("followers")
-                if followers is None:
-                    followers = artist.get("stats", {}).get("followers")
+        if artist_json:
+            artist_data = artist_json.get("response", {}).get("artist", {})
+            artist_name = artist_data.get("name")
+            artist_id = artist_data.get("id")
+            followers = artist_data.get("followers_count") or \
+                        artist_data.get("followers") or \
+                        artist_data.get("stats", {}).get("followers")
 
-                rows.append({
-                    "search_term": term,
-                    "artist_name": artist_name,
-                    "artist_id": artist_id,
-                    "followers_count": followers,
-                })
-            else:
-                rows.append({
-                    "search_term": term,
-                    "artist_name": None,
-                    "artist_id": None,
-                    "followers_count": None,
-                })
+            rows.append({
+                "search_term": term,
+                "artist_name": artist_name,
+                "artist_id": artist_id,
+                "followers_count": followers,
+            })
+        else:
+            rows.append({
+                "search_term": term,
+                "artist_name": None,
+                "artist_id": None,
+                "followers_count": None,
+            })
 
-        df = pd.DataFrame(rows, columns=["search_term", "artist_name", "artist_id", "followers_count"])
-        return df
+    df = pd.DataFrame(rows, columns=["search_term", "artist_name", "artist_id", "followers_count"])
+    return df
 
 
 if __name__ == "__main__":
