@@ -76,7 +76,7 @@ class Genius:
         for aid, name in candidates:
             if name.strip().lower() == norm_search:
                 artist_json = self._request(f"/artists/{aid}")
-                return artist_json.get("response", {}).get("artist")
+                return artist_json
 
         # 2) Fuzzy match using difflib
         names = [name for (_aid, name) in candidates]
@@ -87,12 +87,12 @@ class Genius:
             matched_id = next((aid for (aid, name) in candidates if name == matched_name), None)
             if matched_id:
                 artist_json = self._request(f"/artists/{matched_id}")
-                return artist_json.get("response", {}).get("artist")
+                return artist_json
 
         # 3) fall back to first candidate
         fallback_id = candidates[0][0]
         artist_json = self._request(f"/artists/{fallback_id}")
-        return artist_json.get("response", {}).get("artist")
+        return artist_json
 
     def get_artists(self, search_terms: List[str]) -> pd.DataFrame:
         """Given a list of search terms, return a DataFrame with columns:
