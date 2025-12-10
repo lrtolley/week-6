@@ -38,7 +38,7 @@ class Genius:
         artist_url = f"{self.base_url}/artists/{artist_id}"
         artist_response = requests.get(artist_url, headers=headers)
         artist_data = artist_response.json()
-        return artist_data["response"]["artist"]
+        return artist_data
 
     def get_artists(self, search_terms: List[str]) -> pd.DataFrame:
         rows = []
