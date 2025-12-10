@@ -45,32 +45,33 @@ class Genius:
         for term in search_terms:
             try:
                 artist_json = self.get_artist(term)
-            except Exception:
+            except Exception as e:
+                print(f"Error for {term}: {e}")
                 artist_json = None
 
             if artist_json:
-                artist_name = artist_json.get("name")
-                artist_id = artist_json.get("id")
-                followers = artist_json.get("followers_count") or \
-                            artist_json.get("followers") or \
-                            artist_json.get("stats", {}).get("followers")
-
-                rows.append({
-                    "search_term": term,
-                    "artist_name": artist_name,
-                    "artist_id": artist_id,
-                    "followers_count": followers,
-                })
+                # since get_artist returns full JSON, dig into response
+                artist_data = artist_json.get("response", {}).get("artist", {})
+                artist_name = artist_data.get("name")
+                artist_id = artist_data.get("id")
+                followers = artist_data.get("followers_count") or \
+                            artist_data.get("followers") or \
+                            artist_data.get("stats", {}).get("followers")
             else:
-                rows.append({
-                    "search_term": term,
-                    "artist_name": None,
-                    "artist_id": None,
-                    "followers_count": None,
-                })
+                artist_name = None
+                artist_id = None
+                followers = None
+
+            rows.append({
+                "search_term": term,
+                "artist_name": artist_name,
+                "artist_id": artist_id,
+                "followers_count": followers,
+        })
 
         df = pd.DataFrame(rows, columns=["search_term", "artist_name", "artist_id", "followers_count"])
-        return df
+    return df
+
 
 if __name__ == "__main__":
     genius = Genius(ACCESS_TOKEN)
