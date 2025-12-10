@@ -16,7 +16,7 @@ class Genius:
         url = self.base_url + path
         headers = {"Authorization": "Bearer " + self.access_token}
         try:
-            resp = requests.get(url, headers=headers, params=params, timeout=100)
+            resp = requests.get(url, headers=headers, params=params, timeout=15)
             resp.raise_for_status()
             return resp.json()
         except requests.exceptions.RequestException as e:
