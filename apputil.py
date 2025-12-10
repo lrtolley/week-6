@@ -28,7 +28,11 @@ class Genius:
         search_response = requests.get(search_url, headers=headers, params={"q": search_term})
         search_data = search_response.json()
 
-        first_hit = search_data["response"]["hits"][0]
+        hits = search_data.get("response", {}).get("hits", [])
+        if not hits:
+            print(f"No hits for {search_term}")
+            return None
+
         artist_id = first_hit["result"]["primary_artist"]["id"]
 
         artist_url = f"{self.base_url}/artists/{artist_id}"
