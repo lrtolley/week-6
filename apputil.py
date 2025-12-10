@@ -50,7 +50,6 @@ class Genius:
                 artist_json = None
 
             if artist_json:
-                # since get_artist returns full JSON, dig into response
                 artist_data = artist_json.get("response", {}).get("artist", {})
                 artist_name = artist_data.get("name")
                 artist_id = artist_data.get("id")
@@ -69,7 +68,7 @@ class Genius:
                 "followers_count": followers,
         })
 
-        df = pd.DataFrame(rows, columns=["search_term", "artist_name", "artist_id", "followers_count"])
+    df = pd.DataFrame(rows, columns=["search_term", "artist_name", "artist_id", "followers_count"])
     return df
 
 
