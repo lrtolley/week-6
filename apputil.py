@@ -32,7 +32,7 @@ class Genius:
         if not hits:
             print(f"No hits for {search_term}")
             return None
-
+        first_hit = hits[0]
         artist_id = first_hit["result"]["primary_artist"]["id"]
 
         artist_url = f"{self.base_url}/artists/{artist_id}"
