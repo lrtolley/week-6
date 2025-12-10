@@ -68,8 +68,8 @@ class Genius:
                 "followers_count": followers,
         })
 
-    df = pd.DataFrame(rows, columns=["search_term", "artist_name", "artist_id", "followers_count"])
-    return df
+        df = pd.DataFrame(rows, columns=["search_term", "artist_name", "artist_id", "followers_count"])
+        return df
 
 
 if __name__ == "__main__":
